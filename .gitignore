@@ -3,6 +3,7 @@
 *.ncb
 *.sdf
 *.opensdf
+.vs/
 ipch/
 bin/
 obj/
