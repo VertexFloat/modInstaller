@@ -1,0 +1,10 @@
+*.suo
+*.user
+*.ncb
+*.sdf
+*.opensdf
+ipch/
+bin/
+obj/
+debug/
+release/
