@@ -43,15 +43,14 @@ namespace modInstaller
         }
         private static void installMod(string path)
         {
-            string[] filesToInstall = { "modDesc.xml", "icon.dds" };
-            string[] directoriesToInstall = { "src" };
-
             string modDirectoryPath = getModsInstallDirectory(path);
 
             if (Directory.Exists(modDirectoryPath))
             {
                 string currentDirectory = Environment.CurrentDirectory;
                 string currentDirectoryName = Path.GetFileName(currentDirectory) ?? "mod";
+                string[] filesToInstall = { "modDesc.xml", getModIconFilename(currentDirectory) };
+                string[] directoriesToInstall = { "src", "i18n", "data" };
 
                 if (!Directory.Exists(currentDirectory + @"\temp"))
                 {
@@ -137,7 +136,7 @@ namespace modInstaller
         }
         private static void deleteUnnecessaryFile(string file)
         {
-            string[] toDelete = { "screenshots", "LICENSE", "README.md", ".gitignore" };
+            string[] toDelete = { "screenshots", "LICENSE", "README.md", ".gitignore", ".github" };
 
             if (file != null && file != "")
             {
@@ -164,6 +163,24 @@ namespace modInstaller
                     }
                 }
             }
+        }
+        private static string getModIconFilename(string path)
+        {
+            string modDesc = path + "/modDesc.xml";
+            string icon = "icon.dds";
+
+            using (XmlReader reader = XmlReader.Create(modDesc))
+            {
+                reader.ReadToFollowing("iconFilename");
+
+                icon = reader.ReadElementContentAsString("iconFilename", "");
+
+                reader.Close();
+            }
+
+            icon = icon.Replace(".png", ".dds");
+
+            return icon;
         }
         private static string getModsInstallDirectory(string path)
         {
